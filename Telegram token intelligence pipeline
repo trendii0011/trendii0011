@@ -1,0 +1,263 @@
+# README Review: tg-alpha-engine
+
+## Overall Assessment
+**Rating: 7/10** - Good technical foundation, but needs improvements in clarity, documentation depth, and user guidance.
+
+---
+
+## Strengths ✅
+
+1. **Clear Quick Start**: The setup commands are concise and follow a logical flow
+2. **Good Scope Summary**: Immediately tells users what the project does
+3. **Practical Example**: The `ingest-message` example shows real usage
+4. **Honest Notes**: Acknowledges limitations (stubbed enrichment, SQLite vs Postgres)
+
+---
+
+## Critical Issues 🚨
+
+### 1. Missing Prerequisites
+- **No Python version specified** - What version is required? 3.9+? 3.11+?
+- **No system dependencies mentioned** - Does this need build tools, libsqlite, etc.?
+- **Platform compatibility unclear** - Windows/Mac/Linux all supported?
+
+### 2. Incomplete Setup Instructions
+- `.env.example` is referenced but its contents/required variables are not documented
+- No explanation of what environment variables are needed
+- No Telegram API credentials setup guide
+
+### 3. Unclear Architecture
+- **What is the data flow?** 
+  - How do messages get from Telegram → database?
+  - Is there a bot? A scraper? Manual input only?
+- **What are "snapshots"?** Token price snapshots? When are they created?
+- **What triggers scoring?** Is it automatic or manual-only via CLI?
+
+### 4. Undocumented Features
+The README lists impressive features but doesn't explain them:
+- What makes a mention "early"?
+- How is "quality" measured?
+- What is "coordination" detection?
+- What tags are available?
+- How do blacklists work?
+
+---
+
+## Moderate Issues ⚠️
+
+### 5. Missing Use Cases
+Who is this for?
+- Crypto researchers tracking alpha?
+- Traders looking for signals?
+- Data analysts building dashboards?
+
+### 6. No Output Examples
+- What does `show-tokens` output look like?
+- What data structure do scores have?
+- Sample alert format?
+
+### 7. Incomplete Migration Path
+- "Move to Postgres once you start keeping serious history"
+  - How? Migration script? Configuration change?
+  - What's the schema compatibility?
+
+### 8. No Troubleshooting Section
+Common issues users might face:
+- Database locked errors
+- Telegram API rate limits
+- Invalid contract address formats
+
+---
+
+## Minor Issues 📝
+
+### 9. Typos & Formatting
+- Line 19: "4njMJ9paKzspp3u91KT7vUAvkJuWSNKsCctN4Hbapump" - is "Hbapump" correct? (should it be "pump"?)
+- Inconsistent capitalization in notes section
+
+### 10. Missing Sections
+Standard README elements absent:
+- **License**
+- **Contributing guidelines**
+- **Project status** (alpha/beta/stable?)
+- **Roadmap** or known limitations
+- **Credits/acknowledgments**
+- **Contact/support** info
+
+---
+
+## Suggested Improvements
+
+### High Priority
+
+1. **Add Prerequisites Section**
+```markdown
+## Prerequisites
+- Python 3.11+
+- pip
+- (Optional) PostgreSQL 14+ for production use
+```
+
+2. **Document Environment Variables**
+```markdown
+## Configuration
+Copy `.env.example` to `.env` and configure:
+- `TELEGRAM_API_ID` - Get from https://my.telegram.org
+- `TELEGRAM_API_HASH` - Your API hash
+- `DATABASE_URL` - Default: sqlite:///./tg_alpha.db
+```
+
+3. **Add Architecture Diagram or Flow**
+```markdown
+## How It Works
+1. Monitor Telegram channels for token mentions
+2. Parse Solana contract addresses and tickers
+3. Fetch token metadata and price snapshots
+4. Score mentions based on timing, source quality, and risk factors
+5. Generate alerts for high-conviction plays
+```
+
+4. **Include Example Output**
+```markdown
+## Example Output
+After running the demo:
+```
+TOKEN: ZULU (4njMJ...)
+Score: 87/100
+- Earlyness: 95 (mentioned 2min after launch)
+- Quality: 80 (from verified channel)
+- Coordination: 60 (moderate clustering)
+- Rug Risk: 10 (low)
+Tags: early-gem, high-liquidity
+```
+```
+
+### Medium Priority
+
+5. **Add FAQ Section**
+   - How often should I run `recompute-scores`?
+   - Can I backfill historical messages?
+   - How do I add new channels to monitor?
+
+6. **Expand CLI Documentation**
+```markdown
+## CLI Commands
+- `init-db` - Initialize SQLite database with schema
+- `seed-demo` - Add sample channels and messages
+- `ingest-message` - Manually add a message (for testing)
+- `recompute-scores` - Recalculate all token scores
+- `show-tokens` - Display all tracked tokens with scores
+```
+
+7. **Add Production Deployment Guide**
+   - Postgres setup
+   - Running as a service
+   - Monitoring recommendations
+
+8. **Include Testing Instructions**
+   - Unit tests available?
+   - How to run them?
+   - Test coverage?
+
+---
+
+## Questions for the Author
+
+1. **Is this a passive monitor or active bot?** Does it automatically watch channels, or is everything manual CLI?
+2. **What's the scoring algorithm basis?** Is it ML-based, rule-based, or hybrid?
+3. **Data retention policy?** How much history can SQLite handle before Postgres is needed?
+4. **Real-time vs batch?** Are alerts instant or periodic?
+5. **Multi-chain support planned?** Currently Solana-only, but extensible?
+
+---
+
+## Recommended README Structure
+
+```markdown
+# tg-alpha-engine
+
+## Overview
+[Current intro]
+
+## Features
+- [Detailed list with explanations]
+
+## Prerequisites
+- Python version
+- System dependencies
+- API access requirements
+
+## Installation
+[Current quick start]
+
+## Configuration
+- Environment variables
+- Channel setup
+- Postgres migration (optional)
+
+## Usage
+### Monitoring Channels
+[Auto-watch setup]
+
+### Manual Testing
+[CLI examples]
+
+### Understanding Scores
+[Scoring explanation]
+
+## CLI Reference
+[Full command documentation]
+
+## Architecture
+[Data flow diagram or explanation]
+
+## Production Deployment
+- Postgres setup
+- Systemd service
+- Monitoring
+
+## Troubleshooting
+- Common errors
+- Debug mode
+
+## Roadmap
+- Known limitations
+- Planned features
+
+## Contributing
+## License
+## Credits
+```
+
+---
+
+## Final Recommendations
+
+**Priority 1 (Must Have):**
+- Document prerequisites and Python version
+- Explain .env variables with examples
+- Clarify whether this auto-monitors or is CLI-only
+- Add example output from `show-tokens`
+
+**Priority 2 (Should Have):**
+- Architecture/data flow explanation
+- Scoring methodology overview
+- Postgres migration guide
+- Troubleshooting section
+
+**Priority 3 (Nice to Have):**
+- Production deployment guide
+- FAQ section
+- Contributing guidelines
+- Roadmap
+
+---
+
+## Score Breakdown
+- **Clarity**: 6/10 (quick start is clear, architecture is not)
+- **Completeness**: 5/10 (missing many standard sections)
+- **Technical Accuracy**: 9/10 (appears technically sound)
+- **Usability**: 7/10 (can get started, but many unknowns)
+- **Professional Polish**: 6/10 (functional but sparse)
+
+**Overall: 7/10** - Solid technical project with a bare-bones README that needs expansion to match the sophistication of the codebase.
